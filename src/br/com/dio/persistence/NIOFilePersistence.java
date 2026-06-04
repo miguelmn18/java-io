@@ -3,6 +3,7 @@ package br.com.dio.persistence;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.stream.Stream;
 
 public class NIOFilePersistence implements  FilePersistent{
 
@@ -35,7 +36,13 @@ public class NIOFilePersistence implements  FilePersistent{
 
     @Override
     public boolean remove(String sentence) {
-        return false;
+        var content = findAll();
+        var contentList = Stream.of(content.split(System.lineSeparator())).toList();
+        if(contentList.stream().noneMatch(c -> c.contains(sentence)))return false;
+        clearFile();
+        contentList.stream().filter(c -> !c.contains(sentence))
+                .forEach(this::write);
+        return true;
     }
 
     @Override
@@ -69,7 +76,38 @@ public class NIOFilePersistence implements  FilePersistent{
 
     @Override
     public String findBy(String sentence) {
-        return "";
+        var content = new StringBuilder();
+        try(
+                var file = new RandomAccessFile(new File(currentDir + storeDir + fileName), "r");
+                var channel = file.getChannel();
+        ){
+            var buffer = ByteBuffer.allocate(256);
+            var bytesReader = channel.read(buffer);
+            while(bytesReader != -1){
+                buffer.flip();
+                while(buffer.hasRemaining()) {
+
+                    while (!content.toString().endsWith(System.lineSeparator())) {
+                        content.append((char) buffer.get());
+                    }
+                    if (content.toString().contains(sentence)) {
+                        break;
+                    } else {
+                        content.setLength(0);
+                    }
+                    if(!content.isEmpty()) break;
+                }
+
+
+                buffer.clear();
+                bytesReader = channel.read(buffer);
+            }
+
+        } catch (IOException ex){
+            ex.printStackTrace();
+        }
+        return content.toString();
+
     }
     private void clearFile(){
         try {
