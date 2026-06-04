@@ -19,11 +19,11 @@ public class IOFilePersistence implements  FilePersistent{
     @Override
     public String write(String dado) {
 
-        try{
-        var fileWriter = new FileWriter(currentDir + storeDir + fileName, true);
-        var buffereWriter = new BufferedWriter(fileWriter);
-        var printWrite = new PrintWriter(buffereWriter);
-        printWrite.println(dado);
+        try (var fileWriter = new FileWriter(currentDir + storeDir + fileName, true);
+                 var buffereWriter = new BufferedWriter(fileWriter);
+                 var printWrite = new PrintWriter(buffereWriter)) {
+
+            printWrite.println(dado);
 
         } catch (IOException ex){
             ex.printStackTrace();

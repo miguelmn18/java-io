@@ -8,7 +8,7 @@ public class Main {
         Scanner sc = new Scanner(System.in);
 
         FilePersistent filePersistent = new IOFilePersistence("user.csv");
-        System.out.println(filePersistent.write("Miguel ; Miguel@macedo.com ; 01/12/2004"));
+        System.out.println(filePersistent.write("Miguel;Miguel@macedo.com;01/12/2004"));
 
     }
 }
