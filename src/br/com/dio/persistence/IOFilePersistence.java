@@ -1,6 +1,8 @@
 package br.com.dio.persistence;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.stream.Stream;
 
 public class IOFilePersistence implements  FilePersistent{
 
@@ -33,22 +35,61 @@ public class IOFilePersistence implements  FilePersistent{
 
     @Override
     public boolean remove(String sentence) {
-        return false;
+        var content = findAll();
+        var contentList = new ArrayList<>(Stream.of(content.split(System.lineSeparator())).toList());
+
+        if(contentList.stream().noneMatch(c -> c.contains(sentence))) return false;
+
+        clearFile();
+        contentList.stream().filter(c -> c.contains(sentence))
+                .forEach(this::write);
+        return true;
     }
 
     @Override
-    public String replace(String oldSentence, String newSentecen) {
-        return null;
+    public String replace(String oldSentence, String newSentece) {
+
+        var content = findAll();
+        var contentList = new ArrayList<>(Stream.of(content.split(System.lineSeparator())).toList());
+        if(contentList.stream().noneMatch(c -> c.contains(oldSentence))) return "";
+        clearFile();
+        contentList.stream()
+                .map(c -> c.contains(oldSentence) ? newSentece : c)
+                .forEach(this::write);
+        return newSentece;
     }
 
     @Override
     public String findAll() {
-        return null;
+        var content = new StringBuilder();
+        try (var reader = new BufferedReader( new FileReader(currentDir + storeDir + fileName))){
+            String line;
+            do {
+                line = reader.readLine();
+                if(line != null) content.append(line)
+                        .append(System.lineSeparator());
+            } while (line != null);
+        } catch (IOException ex){
+            ex.printStackTrace();
+        }
+        return content.toString();
     }
 
     @Override
     public String findBy(String sentence) {
-        return null;
+        var  found = "";
+        try (var reader = new BufferedReader(new FileReader(currentDir + storeDir + fileName))){
+            String line = reader.readLine();
+            while (line != null) {
+                if((line.contains(sentence))){
+                    found = line;
+                    break;
+                }
+            }
+        } catch (IOException ex){
+            ex.printStackTrace();
+        }
+        return found;
     }
 
     private void clearFile(){
