@@ -7,25 +7,15 @@ import java.util.SortedMap;
 public class Main {
     public static void main(String[] args) throws IOException {
         Scanner sc = new Scanner(System.in);
-        System.out.println("=======================================================");
-        FilePersistent filePersistent = new IOFilePersistence("user.csv");
-        System.out.println("=======================================================");
-        System.out.println(filePersistent.write("Miguel;Miguel@macedo.com;01/12/2004"));
-        System.out.println("=======================================================");
-        System.out.println(filePersistent.write("Maria;Maria@Machado.com;10/09/1990"));
-        System.out.println("=======================================================");
-        System.out.println(filePersistent.write("Joao;Joao@Farias.com;20/07/2010"));
-        System.out.println("=======================================================");
-        System.out.println(filePersistent.findAll());
-        System.out.println("=======================================================");
-        System.out.println(filePersistent.remove("Miguel"));
-        System.out.println("=======================================================");
-        System.out.println(filePersistent.findBy("Miguel@macedo.com"));
-        System.out.println("=======================================================");
-        System.out.println(filePersistent.remove("2010"));
-        System.out.println("=======================================================");
-        System.out.println(filePersistent.findAll());
 
+        FilePersistent filePersistent = new NIOFilePersistence("user.csv");
+        System.out.println(filePersistent.write("Bianca;Bia@.gmailcom;10/12/2004"));
+        System.out.println("========================");
+        System.out.println(filePersistent.write("Ricardo;Ricardo@gmail.com;10/05/2000"));
+        System.out.println("========================");
+        System.out.println(filePersistent.write("Marisa;Mariasa@gmail.com;/5/09/1890"));
+        System.out.println("========================");
+        System.out.println(filePersistent.findAll());
 
 
     }

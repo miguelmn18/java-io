@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 public class IOFilePersistence implements  FilePersistent{
 
     private final String currentDir = System.getProperty("user.dir");
-    private final String storeDir = "/manager/Files/IO/";
+    private final String storeDir = "/manager/Files/NIO/";
     private final String fileName;
 
     public IOFilePersistence(String fileName) throws IOException {
@@ -92,7 +92,7 @@ public class IOFilePersistence implements  FilePersistent{
         return found;
     }
 
-    private void clearFile(){
+    public void clearFile(){
         try {
             OutputStream outputStream = new FileOutputStream(new File(currentDir + storeDir + fileName));
             System.out.printf("Inicializando recursos (%s) \n" , currentDir + storeDir + fileName);
